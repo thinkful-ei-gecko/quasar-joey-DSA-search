@@ -1,6 +1,5 @@
-'use strict';
-
-const Queue = require('./queue');
+"use strict";
+const Queue = require("./queue");
 
 class BinarySearchTree {
   constructor(key = null, value = null, parent = null) {
@@ -38,13 +37,13 @@ class BinarySearchTree {
     } else if (key > this.key && this.right) {
       return this.right.find(key);
     } else {
-      throw new Error('key error');
+      throw new Error("key error");
     }
   }
 
   remove(key) {
     if (this.key == null) {
-      throw new Error('key error');
+      throw new Error("key error");
     }
     if (this.key === key) {
       if (this.left && this.right) {
@@ -65,7 +64,7 @@ class BinarySearchTree {
       } else if (key > this.key && this.right) {
         this.right.remove(key);
       } else {
-        throw new Error('key error');
+        throw new Error("key error");
       }
     }
   }
@@ -196,50 +195,76 @@ function nextCommandingOfficer(tree, values = []) {
   return values;
 }
 
+// 7. find the best profit you can make in a week
+function best_profit(prices) {
+  if (!prices.length) return 0;
+  // Algorithm: Step through potential selling days. If the price
+  // is lower than our current buying day, switch to a new buying
+  // day. If the price diff between buying and selling days is
+  // greater than our current best, it's our new best.
+  let buy = prices[0],
+    sell = prices[0],
+    profit = 0;
+  for (var i = 1; i < prices.length; ++i) {
+    sell = prices[i];
+    if (sell < buy) buy = sell;
+    if (sell - buy > profit) profit = sell - buy;
+  }
+  return profit;
+}
+
 module.exports = BinarySearchTree;
 
 function main() {
+
+  // 5. implementing different tree traversals
   const bst = new BinarySearchTree();
   const dataset = [25, 15, 50, 10, 24, 35, 70, 4, 12, 18, 31, 44, 66, 90, 22];
-
   for (let i = 0; i < dataset.length; i++) {
     bst.insert(dataset[i], dataset[i]);
   }
-
   // pre-order traversal
-  // <25, 15, 10, 4, 12, 24, 18, 22, 50, 35, 31, 44, 70, 66, 90>
+  // expect: 25, 15, 10, 4, 12, 24, 18, 22, 50, 35, 31, 44, 70, 66, 90>
   console.log(bst.preOrder());
   // in-order
-  // 4, 10, 12, 15, 18, 22, 24, 25, 31, 35, 44, 50, 66, 70, 90
+  // expect: 4, 10, 12, 15, 18, 22, 24, 25, 31, 35, 44, 50, 66, 70, 90
   console.log(bst.inOrder());
   // post-order
-  // 4, 12, 10, 22, 18, 24, 15, 31, 44, 35, 66, 90, 70, 50, 25
+  // expect: 4, 12, 10, 22, 18, 24, 15, 31, 44, 35, 66, 90, 70, 50, 25
   console.log(bst.postOrder());
-  //
-  //
-  // [{ author: 'Cowlishaw, Mike', dewey: '005.133', title: 'The REXX Language' },
-  //   { author: 'Sams', dewey: '005.133', title: 'Teach Yourself C++ In 21 Days' },
-  //   { author: 'Stroustrup., Bjarne', dewey: '005.133', title: 'The C++ Programming Language' },
-  //   { author: 'Crockford, Douglas', dewey: '005.2762', title: 'JavaScript: The Good Parts' },
-  //   { author: 'Flanagan, David', dewey: '005.2762', title: 'JavaScript: The Definitive Guide' },
-  //   { author: 'Schmidt, Meinhard', dewey: '005.44684', title: 'Windows Vista for Dummies' },
-  //   { author: 'Zondervan', dewey: '220.52081', title: 'NIV Study Bible' },
-  //   { author:'Humphries, Russell, Dr.', dewey: '231.7652', title: 'Starlight and Time' },
-  //   { author: 'Jane, Frederick Thomas', dewey: '623.82509051', title: 'Jane\'s Fighting Ships' },
-  //   { author: 'Norris, Chuck', dewey: '796.8092', title: 'The Official Chuck Norris Fact Book' }
-  // ];
-  //
-  const officers = new BinarySearchTree(7, 'Captain Picard');
-  officers.insert(5, 'Commander Riker');
-  officers.insert(8, 'Commander Data');
-  officers.insert(4, 'Lt. Cmdr. Wolf');
-  officers.insert(6, 'Lt. Cmdr. LaForge');
-  officers.insert(10, 'Lt. Cmdr. Crusher');
-  officers.insert(3, 'Lieutenant security-officer');
-  officers.insert(9, 'Lieutenant Selar');
-  console.log(officers);
+  
+  // 3. dewey decimal search book using binary search
+  const books = [{ author: 'Cowlishaw, Mike', dewey: '005.133', title: 'The REXX Language' },
+    { author: 'Sams', dewey: '005.133', title: 'Teach Yourself C++ In 21 Days' },
+    { author: 'Stroustrup., Bjarne', dewey: '005.133', title: 'The C++ Programming Language' },
+    { author: 'Crockford, Douglas', dewey: '005.2762', title: 'JavaScript: The Good Parts' },
+    { author: 'Flanagan, David', dewey: '005.2762', title: 'JavaScript: The Definitive Guide' },
+    { author: 'Schmidt, Meinhard', dewey: '005.44684', title: 'Windows Vista for Dummies' },
+    { author: 'Zondervan', dewey: '220.52081', title: 'NIV Study Bible' },
+    { author:'Humphries, Russell, Dr.', dewey: '231.7652', title: 'Starlight and Time' },
+    { author: 'Jane, Frederick Thomas', dewey: '623.82509051', title: 'Jane\'s Fighting Ships' },
+    { author: 'Norris, Chuck', dewey: '796.8092', title: 'The Official Chuck Norris Fact Book' }
+   ];
+  binarySearchDD('The REXX Language','005.133', books);
+  binarySearchDD('The REXX Language','005.44684', books);
+  binarySearchDD('NIV Study Bible','220.52081', books);
 
+  // 6. find next commanding officer
+  const officers = new BinarySearchTree(7, "Captain Picard");
+  officers.insert(5, "Commander Riker");
+  officers.insert(8, "Commander Data");
+  officers.insert(4, "Lt. Cmdr. Wolf");
+  officers.insert(6, "Lt. Cmdr. LaForge");
+  officers.insert(10, "Lt. Cmdr. Crusher");
+  officers.insert(3, "Lieutenant security-officer");
+  officers.insert(9, "Lieutenant Selar");
+  console.log(officers);
+  //expect: picard, riker, data, worf, laforge, crusher, security, selar
   console.log(`officers: ${nextCommandingOfficer(officers)}`);
+
+  // 7. best prices
+  const prices = [128, 97, 121, 123, 98, 97, 105];
+  console.log(best_profit(prices));
 }
 
 main();
